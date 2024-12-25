@@ -1,19 +1,9 @@
 <?php
-// Database Connection
-$host = 'localhost';
-$dbname = 'gorent';
-$username = 'root';
-$password = 'safaa';
-
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-
-?>
-
+    require_once("../db.php");
+ 
+    $db = new Database();
+    $connection = $db->getConnection();
+ ?>
 <!-- Html Page Struct -->
 <html>
 
@@ -156,16 +146,7 @@ if ($conn->connect_error) {
 
                             <tbody>
                                 <?php
-                                $servername = "localhost";
-                                $username = "root";
-                                $password = "safaa";
-                                $dbname = "gorent";
-
-                                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                                if ($conn->connect_error) {
-                                    die("Connection failed: " . $conn->connect_error);
-                                }
+                               
 
                                 $sql = "
     SELECT 
@@ -182,11 +163,11 @@ if ($conn->connect_error) {
     JOIN cars ON contracts.Car_ID = cars.ID;
 ";
 
-                                $result = $conn->query($sql);
+                                $result = $connection->query($sql);
                                 if (!$result) {
-                                    die("Invalid query: " . $conn->error);
+                                    die("Invalid query: " . $connection->error);
                                 }
-
+ 
                                 // Output the table rows
                                 while ($row = $result->fetch_assoc()) {
                                     echo '
@@ -251,7 +232,7 @@ if ($conn->connect_error) {
                             name="clientId">
                             <option value="" disabled selected>Select a Client</option>
                             <?php
-                            $clients = $conn->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -266,7 +247,7 @@ if ($conn->connect_error) {
                             required>
                             <option value="" disabled selected>Select a car </option>
                             <?php
-                            $cars = $conn->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
+                            $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
                             while ($car = $cars->fetch_assoc()) {
                                 echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
                             }
@@ -327,7 +308,7 @@ if ($conn->connect_error) {
                             name="clientIdEdit" id="clientIdEdit">
                             <option value="" disabled selected>Select a Client</option>
                             <?php
-                            $clients = $conn->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -342,7 +323,7 @@ if ($conn->connect_error) {
                             required>
                             <option>Select a car </option>
                             <?php
-                            $cars = $conn->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
+                            $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
                             while ($car = $cars->fetch_assoc()) {
                                 echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
                             }

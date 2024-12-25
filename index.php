@@ -1,14 +1,8 @@
 <?php
- $host = 'localhost';     
- $dbname = 'gorent';  
- $username = 'root';     
- $password = 'safaa';          
-
- $conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once("./db.php");
+ 
+ $db = new Database();
+ $connection = $db->getConnection();
 $queryResult = "
     SELECT v.Brand AS marque, COUNT(co.ID) AS nombre_contrats
     FROM cars v
@@ -16,7 +10,7 @@ $queryResult = "
     GROUP BY v.Brand
 ";
 
-$result = $conn->query($queryResult); 
+$result = $connection->query($queryResult); 
 
 $labels = [];
 $data = [];
@@ -28,13 +22,13 @@ while ($row = $result->fetch_assoc()) {
 
 
 // contracts count number 
-$nbr_contrat = $conn->query("SELECT COUNT(*) FROM contracts");
+$nbr_contrat = $connection->query("SELECT COUNT(*) FROM contracts");
 
 // clients count number 
-$nbr_clients = $conn->query("SELECT COUNT(*) FROM clients");
+$nbr_clients = $connection->query("SELECT COUNT(*) FROM clients");
 
 // jtm beaucoup bzf bzf
-$total_Revenue =$conn->query(( "SELECT SUM(Total) AS Total_Sum
+$total_Revenue =$connection->query(( "SELECT SUM(Total) AS Total_Sum
 FROM contracts"));
 
 
@@ -368,7 +362,7 @@ FROM contracts"));
                         <option value="" disabled selected >Select a Client</option>
                         <?php
                          
-                            $clients = $conn->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -381,7 +375,7 @@ FROM contracts"));
                         <select id="car" name="carId" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" required>
                             <option value="" disabled selected>Select a car </option>
                             <?php
-                                $cars = $conn->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
+                                $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
                                 while ($car = $cars->fetch_assoc()) {
                                     echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
                                 }
@@ -441,7 +435,7 @@ FROM contracts"));
                         <option value="" disabled selected >Select a Client</option>
                         <?php
                          
-                            $clients = $conn->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -454,7 +448,7 @@ FROM contracts"));
                         <select id="car" name="carId" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" required>
                             <option value="" disabled selected>Select a car </option>
                             <?php
-                                $cars = $conn->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
+                                $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
                                 while ($car = $cars->fetch_assoc()) {
                                     echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
                                 }

@@ -1,20 +1,7 @@
 <?php
-class Database {
-    private $host = "localhost";
-    private $username = "root";
-    private $password = "safaa";
-    private $dbName = "gorent";
-    private $connection;
-
-    public function connect() {
-        $this->connection = new mysqli($this->host, $this->username, $this->password, $this->dbName);
-        if ($this->connection->connect_error) {
-            die("Erreur de connexion : " . $this->connection->connect_error);
-        }
-        return $this->connection;
-    }
-}
-
+require_once("../db.php");
+ 
+    
 class Client {
     private $connection;
 
@@ -39,8 +26,9 @@ if (isset($_GET["id"])) {
     $id = intval($_GET["id"]);
 
     // Connexion à la base de données
-    $database = new Database();
-    $connection = $database->connect();
+    $db = new Database();
+    $connection = $db->getConnection();
+
 
     // Gestion des clients
     $client = new Client($connection);

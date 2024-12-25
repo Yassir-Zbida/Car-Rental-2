@@ -1,20 +1,7 @@
 <?php
-class Database {
-    private $host = "localhost";
-    private $username = "root";
-    private $password = "safaa";
-    private $dbName = "gorent";
-    private $connection;
+require_once("../db.php"); // Inclure la classe Database
 
-    public function connect() {
-        $this->connection = new mysqli($this->host, $this->username, $this->password, $this->dbName);
-        if ($this->connection->connect_error) {
-            die("Erreur de connexion : " . $this->connection->connect_error);
-        }
-        return $this->connection;
-    }
-}
-
+// Classe pour gérer les contrats
 class Contract {
     private $connection;
 
@@ -37,6 +24,7 @@ class Contract {
     }
 }
 
+// Gestion du formulaire
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $clientId = trim(htmlspecialchars($_POST['clientId']));
     $carId = trim(htmlspecialchars($_POST['carId']));
@@ -46,10 +34,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
     // Connexion à la base de données
     $database = new Database();
-    $connection = $database->connect();
+    $connection = $database->getConnection();
 
-    // Gestion des contrats
+    // Ajout du contrat
     $contract = new Contract($connection);
     $contract->addContract($clientId, $carId, $startDate, $endDate, $total);
 }
+
+// Récupération des clients pour la liste déroulante
+function getClients($connection) {
+    $stmt = $connection->prepare("SELECT id, First_Name, Last_Name FROM clients");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $clients = [];
+    while ($row = $result->fetch_assoc()) {
+        $clients[] = $row;
+    }
+
+    $stmt->close();
+    return $clients;
+}
+
+// Récupération des voitures pour la liste déroulante
+function getCars($connection) {
+    $stmt = $connection->prepare("SELECT id, Model FROM cars");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $cars = [];
+    while ($row = $result->fetch_assoc()) {
+        $cars[] = $row;
+    }
+
+    $stmt->close();
+    return $cars;
+}
+
+// Connexion à la base de données
+$database = new Database();
+$connection = $database->getConnection();
+$clients = getClients($connection);
+$cars = getCars($connection);
 ?>

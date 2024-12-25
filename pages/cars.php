@@ -1,4 +1,10 @@
 <!-- Html Page Struct -->
+ <?php
+    require_once("../db.php");
+ 
+    $db = new Database();
+    $connection = $db->getConnection();
+ ?>
 <html>
 
 <head>
@@ -138,16 +144,7 @@
                                 <tbody>
                                   
                                 <?php
-                                 $host = 'localhost';     
-                                 $dbname = 'gorent';  
-                                 $username = 'root';     
-                                 $password = 'safaa'; 
-
-                                 $connection = new mysqli($host, $username, $password, $dbname);
-                                 if ($connection->connect_error) {
-                                    die("Connection failed: " . $connection->connect_error);
-                                }
-
+                                 
                                 $sql = "SELECT * FROM cars";
                                 $result = $connection->query($sql);
                                 if(!$result){

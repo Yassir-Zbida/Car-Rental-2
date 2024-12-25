@@ -1,11 +1,9 @@
 <?php
 // Connexion à la base de données
-$connection = new mysqli("localhost", "root", "safaa", "gorent");
-
-// Vérifier la connexion
-if ($connection->connect_error) {
-    die("Connection failed: " . $connection->connect_error);
-}
+require_once("../db.php");
+ 
+    $db = new Database();
+    $connection = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Récupérer les données du formulaire

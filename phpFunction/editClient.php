@@ -1,20 +1,8 @@
 <?php
 // Classe de gestion de la base de données
-class Database {
-    private $host = "localhost";
-    private $username = "root";
-    private $password = "safaa";
-    private $dbName = "gorent";
-    private $connection;
-
-    public function connect() {
-        $this->connection = new mysqli($this->host, $this->username, $this->password, $this->dbName);
-        if ($this->connection->connect_error) {
-            die("Connection failed: " . $this->connection->connect_error);
-        }
-        return $this->connection;
-    }
-}
+require_once("../db.php");
+ 
+   
 
 // Classe de gestion des clients
 class Client {
@@ -45,8 +33,8 @@ if (isset($_GET['id'])) {
     $clientId = $_GET['id'];
 
     // Connexion à la base de données
-    $database = new Database();
-    $connection = $database->connect();
+    $db = new Database();
+    $connection = $db->getConnection();
 
     // Création de l'objet Client pour gérer les clients
     $client = new Client($connection);
