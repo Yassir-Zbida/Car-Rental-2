@@ -141,7 +141,7 @@
                                  $host = 'localhost';     
                                  $dbname = 'gorent';  
                                  $username = 'root';     
-                                 $password = 'yassir'; 
+                                 $password = 'safaa'; 
 
                                  $connection = new mysqli($host, $username, $password, $dbname);
                                  if ($connection->connect_error) {

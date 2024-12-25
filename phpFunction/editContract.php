@@ -1,28 +1,45 @@
 <?php
-$connection = new mysqli("localhost", "root", "yassir", "gorent");
+// Connexion à la base de données
+$connection = new mysqli("localhost", "root", "safaa", "gorent");
+
+// Vérifier la connexion
 if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Récupérer les données du formulaire
     $contractId = $_POST['ContractEdit'];
-    $clientid = $_POST['clientIdEdit'];
-    $carId= $_POST['carIdEdit'];
+    $clientId = $_POST['clientIdEdit'];
+    $carId = $_POST['carIdEdit'];
     $startDate = $_POST['startDateEdit'];
     $endDate = $_POST['endDateEdit'];
     $totalEdit = $_POST['totalEdit'];
-    
 
-    $updateSql = "update contracts set Client_ID='$clientid', Car_ID='$carId', Start_Date='$startDate' ,Total='$totalEdit' where ID = $contractId";
+    // Requête préparée pour mettre à jour le contrat
+    $updateSql = "UPDATE contracts SET Client_ID = ?, Car_ID = ?, Start_Date = ?, End_Date = ?, Total = ? WHERE ID = ?";
 
-    if ($connection->query($updateSql) === TRUE) {
-        echo "Client updated successfully!";
-        header("Location: /pages/contrats.php"); 
-        exit;
+    // Préparer la requête
+    if ($stmt = $connection->prepare($updateSql)) {
+        // Lier les paramètres
+        $stmt->bind_param("iissdi", $clientId, $carId, $startDate, $endDate, $totalEdit, $contractId);
+
+        // Exécuter la requête
+        if ($stmt->execute()) {
+            echo "Contract updated successfully!";
+            header("Location: /pages/contrats.php"); 
+            exit;
+        } else {
+            echo "Error updating contract: " . $stmt->error;
+        }
+
+        // Fermer la requête
+        $stmt->close();
     } else {
-        echo "Error updating client: " . $connection->error;
+        echo "Error preparing query: " . $connection->error;
     }
-
-   
-
 }
+
+// Fermer la connexion
+$connection->close();
+?>
