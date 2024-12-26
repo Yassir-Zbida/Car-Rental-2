@@ -1,3 +1,46 @@
+<?php
+
+session_start();
+require_once 'db.php';
+$db = new Database();
+$connection = $db->getConnection();
+$error = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
+    if (!empty($username) && !empty($password)) {
+        $stmt = $connection->prepare("SELECT * FROM users WHERE username = ?");
+        if ($stmt) {
+            $stmt->bind_param('s', $username); // 's' indique un string
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
+
+            if ($user && password_verify($password, $user['password_hash'])) {
+                
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['email'] = $user['email'];
+                header('Location: dashboard.php');
+                exit;
+            } else {
+                $error = "Nom d'utilisateur ou mot de passe incorrect.";
+            }
+
+            $stmt->close();
+        } else {
+            $error = "Erreur lors de la préparation de la requête SQL.";
+        }
+    } else {
+        $error = "Veuillez remplir tous les champs.";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,13 +59,17 @@
 <body class="flex items-center justify-center min-h-screen">
   <div class="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-md">
     <h2 class="text-2xl font-semibold text-white text-center mb-6">Login</h2>
-    <form action="#" method="POST">
+    <form action="login.php" method="POST">
+    <?php if (!empty($error)): ?>
+            <p class="text-red-500 text-center mb-4"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
       <div class="mb-4">
         <label for="username" class="block text-white mb-2">Username</label>
         <div class="flex items-center bg-white/30 rounded-lg">
           <input
             type="text"
             id="username"
+            name="username"
             placeholder="Username"
             class="bg-transparent text-white flex-grow px-4 py-2 outline-none"
           />
@@ -37,6 +84,7 @@
           <input
             type="password"
             id="password"
+            name="password"
             placeholder="Password"
             class="bg-transparent text-white flex-grow px-4 py-2 outline-none"
           />
@@ -54,6 +102,7 @@
       </div>
       <button
         type="submit"
+        name="submit"
         class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
       >
         Login
