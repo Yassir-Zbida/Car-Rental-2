@@ -11,7 +11,7 @@ class Client {
     }
 
     public function addClient($firstName, $lastName, $email, $phone, $address) {
-        $stmt = $this->connection->prepare("INSERT INTO `clients` (`First_Name`, `Last_Name`, `Phone`, `Email`, `Address`) 
+        $stmt = $this->connection->prepare("INSERT INTO `users` (`first_name`, `last_name`, `phone`, `email`, `address`) 
                                             VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("sssss", $firstName, $lastName, $phone, $email, $address);
         if ($stmt->execute()) {

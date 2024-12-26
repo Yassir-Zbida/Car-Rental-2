@@ -25,7 +25,7 @@ while ($row = $result->fetch_assoc()) {
 $nbr_contrat = $connection->query("SELECT COUNT(*) FROM contracts");
 
 // clients count number 
-$nbr_clients = $connection->query("SELECT COUNT(*) FROM clients");
+$nbr_clients = $connection->query("SELECT COUNT(*) FROM users");
 
 // jtm beaucoup bzf bzf
 $total_Revenue =$connection->query(( "SELECT SUM(Total) AS Total_Sum
@@ -362,7 +362,7 @@ FROM contracts"));
                         <option value="" disabled selected >Select a Client</option>
                         <?php
                          
-                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM users");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -435,7 +435,7 @@ FROM contracts"));
                         <option value="" disabled selected >Select a Client</option>
                         <?php
                          
-                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM users");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }

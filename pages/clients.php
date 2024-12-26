@@ -147,7 +147,7 @@
                             <!-- Table Body -->
                             <tbody>
                               <?php
-                                $sql = "SELECT * FROM clients";
+                                $sql = "SELECT * FROM users";
                                 $result = $connection->query($sql);
                                 if(!$result){
                                     die("invalid query:".$connection->error);
@@ -156,11 +156,11 @@
                                     echo'
                                     <tr class="hover:bg-gray-50">
                                        <td class="py-3 px-4 border-b">'. $row["id"] .'</td>
-                                       <td class="py-3 px-4 border-b">'. $row["First_Name"] .'</td>
-                                       <td class="py-3 px-4 border-b">'. $row["Last_Name"] .'</td>
-                                       <td class="py-3 px-4 border-b">'. $row["Email"] .'</td>
-                                       <td class="py-3 px-4 border-b">'. $row["Phone"] .'</td>
-                                       <td class="py-3 px-4 border-b">'. $row["Address"] .'</td>
+                                       <td class="py-3 px-4 border-b">'. $row["first_name"] .'</td>
+                                       <td class="py-3 px-4 border-b">'. $row["last_name"] .'</td>
+                                       <td class="py-3 px-4 border-b">'. $row["email"] .'</td>
+                                       <td class="py-3 px-4 border-b">'. $row["phone"] .'</td>
+                                       <td class="py-3 px-4 border-b">'. $row["address"] .'</td>
                                        <td class="py-3 px-4 border-b text-center space-x-2">
                                        
                                        <a href="../phpFunction/editClient.php?id='.$row["id"].'" class="text-blue-500 hover:text-blue-600 editClientBtn">
