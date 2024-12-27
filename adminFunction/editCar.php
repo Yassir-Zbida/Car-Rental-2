@@ -1,61 +1,20 @@
 <?php
-// Classe de gestion de la base de données
+
 require_once("../db.php");
- 
-    
+require_once("../pages/car.php");
 
-// Classe de gestion des voitures
-class Car {
-    private $connection;
-
-    public function __construct($dbConnection) {
-        $this->connection = $dbConnection;
-    }
-
-    // Récupère les détails de la voiture par ID
-    public function getCarById($id) {
-        $stmt = $this->connection->prepare("SELECT * FROM cars WHERE ID = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
-    }
-
-    // Met à jour les informations de la voiture
-    public function updateCar($id, $brandName, $model, $priceDay, $year) {
-        $stmt = $this->connection->prepare("UPDATE cars SET Brand = ?, Model = ?, `Price/Day` = ?, Year = ? WHERE ID = ?");
-        $stmt->bind_param("ssdis", $brandName, $model, $priceDay, $year, $id);
-        return $stmt->execute();
-    }
-}
-
-// Vérifie si l'ID est passé dans l'URL
 if (isset($_GET['id'])) {
     $carId = $_GET['id'];
-
-    // Connexion à la base de données
     $db = new Database();
-    $connection = $db->getConnection();
-
-    // Création de l'objet Car pour gérer la voiture
-    $car = new Car($connection);
-
-    // Récupère les détails de la voiture
+    $car = new Car($db);
     $carDetails = $car->getCarById($carId);
-
-    // Si la voiture existe
-    if (!$carDetails) {
-        echo "Car ID is missing or invalid.";
-        exit;
-    }
-
-    // Traitement du formulaire de mise à jour
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $brandName = $_POST['brandName'];
         $model = $_POST['model'];
         $priceDay = $_POST['priceDay'];
         $year = $_POST['year'];
 
-        // Met à jour les informations de la voiture
+ 
         if ($car->updateCar($carId, $brandName, $model, $priceDay, $year)) {
             header("Location: ../pages/cars.php");
             exit;
@@ -90,19 +49,19 @@ if (isset($_GET['id'])) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <div>
                         <label for="brandName" class="mb-2 block text-sm font-medium text-gray-700">Brand Name</label>
-                        <input type="text" id="brandName" name="brandName" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['Brand']; ?>" required />
+                        <input type="text" id="brandName" name="brandName" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['brand']; ?>" required />
                     </div>
                     <div>
                         <label for="model" class="mb-2 block text-sm font-medium text-gray-700">Model</label>
-                        <input type="text" id="model" name="model" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['Model']; ?>" required />
+                        <input type="text" id="model" name="model" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['model']; ?>" required />
                     </div>
                     <div>
                         <label for="priceDay" class="mb-2 block text-sm font-medium text-gray-700">Price/Day</label>
-                        <input type="text" id="priceDay" name="priceDay" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['Price/Day']; ?>" required />
+                        <input type="text" id="priceDay" name="priceDay" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['price_per_day']; ?>" required />
                     </div>
                     <div>
                         <label for="year" class="mb-2 block text-sm font-medium text-gray-700">Year</label>
-                        <input type="text" id="year" name="year" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['Year']; ?>" required />
+                        <input type="text" id="year" name="year" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $carDetails['year']; ?>" required />
                     </div>
                 </div>
 
