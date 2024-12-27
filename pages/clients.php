@@ -1,10 +1,14 @@
-<!-- Html Page Struct -->
 <?php
-    require_once("../db.php");
- 
-    $db = new Database();
-    $connection = $db->getConnection();
- ?>
+require_once("../db.php") ;
+require_once ('user.php');
+
+// Initialisation de la base de données et de l'objet User
+$db = new Database();
+$connection = $db->getConnection();
+$user = new User($db);
+$users = $user->getAllUsers();
+
+?>
 <html>
 
 <head>
@@ -40,7 +44,7 @@
             <nav class="p-6">
                 <ul class="space-y-6">
                     <li class="text-orange-600">
-                        <a href="../admin/dashbord.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
+                        <a href="../index.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-dashboard-line"></i>
                             <span">Dashboard</span>
                         </a>
