@@ -70,10 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         <?php endif; ?>
 
         <form action="#" method="POST">
-            <!-- Nom -->
+            
             <div class="mb-4">
                 <label for="nom" class="block text-white mb-2">Nom d'utilisateur</label>
                 <div class=" bg-white/30 rounded-lg">
@@ -107,7 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 </div>            
             </div>
 
-            <!-- Email -->
             <div class="mb-4">
                 <label for="email" class="block text-white mb-2">Email</label>
                 <div class=" bg-white/30 rounded-lg">
@@ -115,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 </div>
             </div>
 
-            
             <div class="mb-4">
                 <label for="password" class="block text-white mb-2">Mot de passe</label>
                 <div class=" bg-white/30 rounded-lg">
@@ -123,11 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 </div>
             </div>
             
-            
             <button type="submit" name='submit'class="w-full mt-3 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition">
                 Create Account
             </button>
-            <p class="text-center text-white mt-4">have an account? <a href="login.php" class="hover:underline">login</a>
+            <p class="text-center text-white mt-4">have an account? <a href="login.php" class="hover:underline text-black">login</a>
       </p>
         </form>
     </div>

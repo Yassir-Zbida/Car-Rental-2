@@ -47,7 +47,7 @@ FROM contracts"));
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="./assets/gorent.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./scripts/script.js" defer></script>
+    <script src="../scripts/script.js" defer></script>
     
 </head>
 
@@ -105,7 +105,19 @@ FROM contracts"));
                         </a>
                     </li>
                 </ul>
+                <hr class="my-6">
+                <ul class="space-y-6">
+                    <li>
+                        <a href="../logout.php" class="flex items-center space-x-4 text-red-600 hover:text-orange-600">
+                            <i class="ri-logout-box-line"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                    
+                </ul>
             </nav>
+
+            
         </aside>
 
         <section class="flex-1 p-4 md:p-6 space-y-6">
@@ -114,12 +126,12 @@ FROM contracts"));
                 class="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
                 <i class="ri-sidebar-fold-line text-2xl mt-2 text-orange-600 hover:text-gray-700 transition"
                     id="sidebarIcon"></i>
-                <h2 class="text-2xl font-bold">Welcome Yassir</h2>
+                <h2 class="text-2xl font-bold">Welcome Admin</h2>
                 <div class="flex items-center space-x-4">
                     <button class="text-gray-500 hover:text-gray-700">
                         <i class="ri-notification-line text-xl"></i>
                     </button>
-                    <img src="../assets/profile.png" alt="User" class="w-10 h-10 rounded-full">
+                    <img src="../assets/gorent-avatar.svg" alt="User" class="w-10 h-10 rounded-full">
                 </div>
             </header>
 

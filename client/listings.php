@@ -50,7 +50,7 @@
                 <div class="container flex items-center justify-between py-4">
 
                     <div class="flex items-center space-x-2 text-gray-800 font-semibold">
-                        <a href="./index.php">
+                        <a href="../index.php">
                             <img src="../assets/gorent-logo.svg" width="160px">
                         </a>
                     </div>
