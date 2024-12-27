@@ -1,9 +1,11 @@
 <!-- Html Page Struct -->
- <?php
-    require_once("../db.php");
- 
-    $db = new Database();
-    $connection = $db->getConnection();
+<?php
+ require_once("../db.php") ;
+require_once ('car.php');
+$db = new Database();
+$connection = $db->getConnection();
+$user = new Car($db);
+$users = $user->getAllCars();
  ?>
 <html>
 
@@ -40,7 +42,7 @@
             <nav class="p-6">
                 <ul class="space-y-6">
                     <li class="text-orange-600">
-                        <a href="../index.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
+                        <a href="../admin/dashbord.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-dashboard-line"></i>
                             <span>Dashboard</span>
                         </a>
@@ -128,7 +130,7 @@
                     <div class="overflow-x-auto">
                         <div class="overflow-x-auto bg-white shadow rounded-lg">
                             <table class="border w-full border-collapse text-sm text-gray-600">
-                                
+                                <!-- Table Head -->
                                 <thead>
                                     <tr class="bg-gray-100 text-left">
                                         <th class="py-2 px-4 border-b">ID</th>
@@ -140,7 +142,7 @@
                                         <th class="py-2 px-4 border-b text-center thActions">Actions</th>
                                     </tr>
                                 </thead>
-                                
+                                <!-- Table Body -->
                                 <tbody>
                                   
                                 <?php
@@ -153,20 +155,20 @@
                                 while($row = $result->fetch_assoc()){
                                     echo'
                                     <tr class="hover:bg-gray-50">
-                                        <td class="py-3 px-4 border-b">'. $row["ID"] .'</td>
-                                        <td class="py-3 px-4 border-b">'. $row["Brand"] .'</td>
-                                        <td class="py-3 px-4 border-b">'. $row["Model"] .'</td>
-                                        <td class="py-3 px-4 border-b">'. $row["Year"] .'</td>
-                                        <td class="py-3 px-4 border-b">'. $row["Price/Day"] .'</td>
+                                        <td class="py-3 px-4 border-b">'. $row["id"] .'</td>
+                                        <td class="py-3 px-4 border-b">'. $row["brand"] .'</td>
+                                        <td class="py-3 px-4 border-b">'. $row["model"] .'</td>
+                                        <td class="py-3 px-4 border-b">'. $row["year"] .'</td>
+                                        <td class="py-3 px-4 border-b">'. $row["price_per_day"] .'</td>
                                         <td class="py-3 px-4 border-b">
                                             <span
                                                 class="bg-green-100 text-green-600 py-1 px-3 rounded-full">Available</span>
                                         </td>
                                         <td class="py-3 px-4 border-b text-center space-x-2">
-                                            <a href="../phpFunction/editCar.php?id='.$row["ID"].'" class="text-blue-500 hover:text-blue-600 editCarBtn">
+                                            <a href="../adminFunction/editCar.php?id='.$row["id"].'" class="text-blue-500 hover:text-blue-600 editCarBtn">
                                                 <i class="ri-edit-line text-lg"></i>
                                             </a>
-                                            <a href="../phpFunction/deleteCar.php?id='.$row["ID"].'" class="deleteCarBtn">
+                                            <a href="../adminFunction/deleteCar.php?id='.$row["id"].'" class="deleteCarBtn">
                                              <i class="ri-delete-bin-line text-lg text-red-500 hover:text-red-700"></i>
                                             </a>
                                         </td>
@@ -187,7 +189,7 @@
 
         <!-- Add new car modal  -->
 
-        <div id="addCarModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
+        <div id="addCarModal" class=" hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
 
             <div class="flex justify-between items-center mb-4">
@@ -196,7 +198,7 @@
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="../phpFunction/addCar.php" method="post">
+            <form action="../adminFunction/addCar.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
                     <div class="col-span-2">
