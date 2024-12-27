@@ -172,7 +172,7 @@
                                 while ($row = $result->fetch_assoc()) {
                                     echo '
     <tr class="hover:bg-gray-50">
-    <td class="py-3 px-4 border-b">' . htmlspecialchars($row["id"]) . '</td>
+        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["id"]) . '</td>
         <td class="py-3 px-4 border-b">' . htmlspecialchars($row["ClientName"]) . '</td> 
         <td class="py-3 px-4 border-b">' . htmlspecialchars($row["Car_Name"]) . '</td> 
         <td class="py-3 px-4 border-b">' . htmlspecialchars($row["start_date"]) . '</td>
@@ -232,7 +232,7 @@
                             name="clientId">
                             <option value="" disabled selected>Select a Client</option>
                             <?php
-                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(first_name, ' ',last_name) AS Full_Name FROM users");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -247,9 +247,9 @@
                             required>
                             <option value="" disabled selected>Select a car </option>
                             <?php
-                            $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
+                            $cars = $connection->query("SELECT id, CONCAT(brand, ' ', model) AS cars FROM cars ");
                             while ($car = $cars->fetch_assoc()) {
-                                echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
+                                echo "<option value='{$car['id']}'>{$car['cars']}</option>";
                             }
                             ?>
                         </select>
@@ -308,7 +308,7 @@
                             name="clientIdEdit" id="clientIdEdit">
                             <option value="" disabled selected>Select a Client</option>
                             <?php
-                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM clients");
+                            $clients = $connection->query("SELECT id, CONCAT(first_name, ' ',last_name) AS Full_Name FROM users");
                             while ($client = $clients->fetch_assoc()) {
                                 echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
                             }
@@ -323,9 +323,9 @@
                             required>
                             <option>Select a car </option>
                             <?php
-                            $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
+                            $cars = $connection->query("SELECT id, CONCAT(brand, ' ', model) AS cars FROM cars ");
                             while ($car = $cars->fetch_assoc()) {
-                                echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
+                                echo "<option value='{$car['id']}'>{$car['cars']}</option>";
                             }
                             ?>
                         </select>
