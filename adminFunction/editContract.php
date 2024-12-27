@@ -1,43 +1,32 @@
 <?php
-// Connexion à la base de données
-require_once("../db.php");
- 
-    $db = new Database();
-    $connection = $db->getConnection();
+require_once("../db.php"); 
+require_once("../pages/contract.php");
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Récupérer les données du formulaire
-    $contractId = $_POST['ContractEdit'];
-    $clientId = $_POST['clientIdEdit'];
-    $carId = $_POST['carIdEdit'];
-    $startDate = $_POST['startDateEdit'];
-    $endDate = $_POST['endDateEdit'];
-    $totalEdit = $_POST['totalEdit'];
 
-    // Requête préparée pour mettre à jour le contrat
-    $updateSql = "UPDATE contracts SET Client_ID = ?, Car_ID = ?, Start_Date = ?, End_Date = ?, Total = ? WHERE ID = ?";
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+    $contractId = trim(htmlspecialchars($_POST['ContractEdit']));
+    $clientId = trim(htmlspecialchars($_POST['clientIdEdit']));
+    $carId = trim(htmlspecialchars($_POST['carIdEdit']));
+    $startDate = trim(htmlspecialchars($_POST['startDateEdit']));
+    $endDate = trim(htmlspecialchars($_POST['endDateEdit']));
+    $total = trim(htmlspecialchars($_POST['totalEdit']));
 
-    // Préparer la requête
-    if ($stmt = $connection->prepare($updateSql)) {
-        // Lier les paramètres
-        $stmt->bind_param("iissdi", $clientId, $carId, $startDate, $endDate, $totalEdit, $contractId);
 
-        // Exécuter la requête
-        if ($stmt->execute()) {
-            echo "Contract updated successfully!";
-            header("Location: /pages/contrats.php"); 
-            exit;
-        } else {
-            echo "Error updating contract: " . $stmt->error;
-        }
+    if (empty($contractId) || empty($clientId) || empty($carId) || empty($startDate) || empty($endDate) || !is_numeric($total)) {
+        die("Veuillez remplir tous les champs correctement.");
+    }
 
-        // Fermer la requête
-        $stmt->close();
+    $database = new Database();
+    $connection = $database->getConnection();
+
+    $contract = new Contract($connection);
+    $result = $contract->updateContract($contractId, $clientId, $carId, $startDate, $endDate, $total);
+
+    if ($result === true) {
+        header("Location: ../pages/contrats.php");
+        exit();
     } else {
-        echo "Error preparing query: " . $connection->error;
+        echo "Erreur lors de la mise à jour : " . $result;
     }
 }
-
-// Fermer la connexion
-$connection->close();
 ?>
