@@ -128,7 +128,7 @@
                     <div class="overflow-x-auto">
                         <div class="overflow-x-auto bg-white shadow rounded-lg">
                             <table class="border w-full border-collapse text-sm text-gray-600">
-                                <!-- Table Head -->
+                                
                                 <thead>
                                     <tr class="bg-gray-100 text-left">
                                         <th class="py-2 px-4 border-b">ID</th>
@@ -140,7 +140,7 @@
                                         <th class="py-2 px-4 border-b text-center thActions">Actions</th>
                                     </tr>
                                 </thead>
-                                <!-- Table Body -->
+                                
                                 <tbody>
                                   
                                 <?php

@@ -21,6 +21,8 @@ class Database {
     public function closeConnection() {
         $this->connection->close();
     }
+
+
 }
 
 ?>

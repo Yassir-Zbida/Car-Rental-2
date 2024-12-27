@@ -1,532 +1,360 @@
-<?php
-require_once("./db.php");
- 
- $db = new Database();
- $connection = $db->getConnection();
-$queryResult = "
-    SELECT v.Brand AS marque, COUNT(co.ID) AS nombre_contrats
-    FROM cars v
-    JOIN contracts co ON v.ID = co.Car_ID
-    GROUP BY v.Brand
-";
-
-$result = $connection->query($queryResult); 
-
-$labels = [];
-$data = [];
-
-while ($row = $result->fetch_assoc()) {
-    $labels[] = $row['marque']; 
-    $data[] = $row['nombre_contrats']; 
-}
-
-
-// contracts count number 
-$nbr_contrat = $connection->query("SELECT COUNT(*) FROM contracts");
-
-// clients count number 
-$nbr_clients = $connection->query("SELECT COUNT(*) FROM users");
-
-// jtm beaucoup bzf bzf
-$total_Revenue =$connection->query(( "SELECT SUM(Total) AS Total_Sum
-FROM contracts"));
-
-
-
-?>
-
-<!-- Html Page Struct -->
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Rent - Car Rental</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gorent - Home </title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="./assets/gorent.svg">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./scripts/script.js" defer></script>
-    
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
 
-<body class="bg-gray-50 text-gray-700">
+<style>
+    div#scrollable {
+        border: 5px red solid;
+        width: 150px;
+        height: 200px;
+        overflow-y: scroll;
+    }
 
-    <!-- main container -->
-    <div class="flex flex-col lg:flex-row min-h-screen ">
-        <!-- Sidebar -->
-        <aside class="w-full lg:w-64 bg-white border-r" id="sidebar">
-            <div class="p-6 border-b flex flex-row justify-between items-center">
-                <img src="./assets/gorent-logo.svg">
-            </div>
-            <nav class="p-6">
-                <ul class="space-y-6">
-                    <li class="text-orange-600">
-                        <a href="#" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
-                            <i class="ri-dashboard-line text-orange-600"></i>
-                            <span class="text-orange-600">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./pages/clients.php"
-                            class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
-                            <i class="ri-group-line"></i>
-                            <span>Clients</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./pages/cars.php"
-                            class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
-                            <i class="ri-car-line"></i>
-                            <span>Cars</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./pages/contrats.php"
-                            class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
-                            <i class="ri-save-line"></i>
-                            <span>Contrats</span>
-                        </a>
-                    </li>
-                </ul>
-                <hr class="my-6">
-                <ul class="space-y-6">
-                    <li>
-                        <a href="#" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
-                            <i class="ri-exchange-dollar-line"></i>
-                            <span>Transactions</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
-                            <i class="ri-bar-chart-box-line"></i>
-                            <span>Statistiques</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
 
-        <section class="flex-1 p-4 md:p-6 space-y-6">
-            <!-- Header -->
-            <header
-                class="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
-                <i class="ri-sidebar-fold-line text-2xl mt-2 text-orange-600 hover:text-gray-700 transition"
-                    id="sidebarIcon"></i>
-                <h2 class="text-2xl font-bold">Welcome Yassir</h2>
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <i class="ri-notification-line text-xl"></i>
-                    </button>
-                    <img src="./assets/profile.png" alt="User" class="w-10 h-10 rounded-full">
+    ::-webkit-scrollbar-track {
+        background: white;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: lightgray;
+        border-radius: 10px;
+    }
+
+    div:hover::-webkit-scrollbar-thumb {
+        background: #737373;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #f65519;
+    }
+</style>
+
+<body class="bg-gray-50 mx-12">
+
+    <!-- Header -->
+    <section class="relative mt-3 flex  rounded-2xl text-white mb-6">
+        <div class="container flex flex-col justify-between">
+            <header class=" top-0 z-50">
+                <div class="container flex items-center justify-between py-4">
+
+                    <div class="flex items-center space-x-2 text-gray-800 font-semibold">
+                        <a href="./index.php">
+                            <img src="./assets/gorent-logo.svg" width="160px">
+                        </a>
+                    </div>
+
+                    <div>
+                        <ul class="text-black flex flex-row gap-6 text-[18px] font-semibold font-epilogue">
+                            <li class="text-orange-600"><a href="">Home</a></li>
+                            <li class="hover:text-orange-600"><a href="">Cars</a></li>
+                            <li class="hover:text-orange-600"><a href="">Bookings</a></li>
+                            <li class="hover:text-orange-600"><a href="">About</a></li>
+                            <li class="hover:text-orange-600"><a href="">Contact</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="hidden md:flex items-center space-x-4">
+                        <button
+                            class="px-6 py-2 bg-orange-600 text-white text-lg rounded-full hover:bg-[#737373] hover:text-white">
+                            <a href="./login.php">Login</a>
+                        </button>
+                    </div>
+
                 </div>
             </header>
 
-            <!-- Quik action section-->
-            <div class="p-6 bg-white shadow rounded-lg">
-                <h3 class="text-xl font-bold text-gray-700 mb-4">Quick Actions</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        </div>
+    </section>
 
-                    <button
-                        class="flex items-center justify-center p-2 text-gray-700 border border-gray-700 font-medium rounded-lg shadow hover:bg-orange-600 hover:border-none hover:text-white transition duration-200"
-                        id="addClientBtn">
-                        <i class="ri-user-add-line text-2xl mr-2"></i>
-                        Add New Client
-                    </button>
 
-                    <button
-                        class="flex items-center justify-center p-2  border border-gray-700 text-gray-700 font-medium rounded-lg shadow hover:bg-orange-600 hover:border-none hover:text-white transition duration-800" id="addCarBtn">
-                        <i class="ri-car-line text-2xl mr-2"></i>
-                        Add New Car
-                    </button>
+    <!-- Hero section -->
 
-                    <button
-                        class="flex items-center justify-center p-2 text-gray-700 border border-gray-700 font-medium rounded-lg shadow hover:bg-orange-600 hover:border-none hover:text-white transition duration-200" id="addContratBtn">
-                        <i class="ri-file-add-line text-2xl mr-2"></i>
-                        Create New Contract
-                    </button>
+    <section
+        class="relative bg-cover bg-center bg-[url('/assets/hero-bg.jpg')] h-[96vh] rounded-2xl flex justify-center items-center">
+        <div class="absolute inset-0 bg-black/50 rounded-2xl"></div>
+
+        <div class="relative text-center text-white max-w-3xl px-4">
+            <p class="text-orange-500 font-semibold uppercase tracking-wide mb-2">
+                <i class="ri-sparkling-2-fill"></i> Welcome To Go Rent
+            </p>
+
+            <h1 class="text-4xl md:text-5xl font-bold leading-snug mb-6">
+                Looking to save more on your rental car?
+            </h1>
+
+            <p class="text-lg text-white/80 mb-8">
+                Whether you’re planning a weekend getaway, a business trip, or just need a reliable ride for the day, we
+                offer a wide range of vehicles to suit your needs.
+            </p>
+
+            <div class="flex justify-center space-x-4">
+                <a href="#book" class="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 py-3 rounded-full">
+                    Book A Rental
+                </a>
+                <a href="#learn-more"
+                    class="bg-white text-black font-medium px-6 py-3 rounded-full flex items-center space-x-2">
+                    <span>Learn More</span>
+                    <i class="ri-arrow-right-up-line"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section>
+
+        <div class="py-16">
+            <h2 class="text-center text-4xl font-bold text-gray-800 mb-10">
+                Explore Our Car Rentals
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+
+
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img class="w-full h-120 object-cover group-hover:scale-110 transition-transform duration-300"
+                        src="./assets/luxury-collection.jpg" alt="Sport Car">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-colors duration-300">
+                    </div>
+                    <div class="absolute bottom-4 left-4 text-white">
+                        <h3 class="text-xl font-semibold">Sport Car</h3>
+                    </div>
+                    <a href="#"
+                        class="absolute bottom-4 right-4 bg-orange-600 text-white p-2 rounded-full group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="ri-arrow-right-up-line text-xl"></i>
+                    </a>
+                </div>
+
+
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img class="w-full h-120 object-cover group-hover:scale-110 transition-transform duration-300"
+                        src="./assets/luxecar.jpg" alt="Convertible Car">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-colors duration-300">
+                    </div>
+                    <div class="absolute bottom-4 left-4 text-white">
+                        <h3 class="text-xl font-semibold">Convertible Car</h3>
+                    </div>
+                    <a href="#"
+                        class="absolute bottom-4 right-4 bg-orange-600 text-white p-2 rounded-full group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="ri-arrow-right-up-line text-xl"></i>
+                    </a>
+                </div>
+
+
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img class="w-full h-120 object-cover group-hover:scale-110 transition-transform duration-300"
+                        src="./assets/sedancar.jpg" alt="Sedan Car">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-colors duration-300">
+                    </div>
+                    <div class="absolute bottom-4 left-4 text-white">
+                        <h3 class="text-xl font-semibold">Sedan Car</h3>
+                    </div>
+                    <a href="#"
+                        class="absolute bottom-4 right-4 bg-orange-600 text-white p-2 rounded-full group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="ri-arrow-right-up-line text-xl"></i>
+                    </a>
+                </div>
+
+
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img class="w-full h-120 object-cover group-hover:scale-110 transition-transform duration-300"
+                        src="./assets/luxury.jpg" alt="Luxury Car">
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-colors duration-300">
+                    </div>
+                    <div class="absolute bottom-4 left-4 text-white">
+                        <h3 class="text-xl font-semibold">Luxury Car</h3>
+                    </div>
+                    <a href="#"
+                        class="absolute bottom-4 right-4 bg-orange-600 text-white p-2 rounded-full group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="ri-arrow-right-up-line text-xl"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- testimonails -->
+
+    <div class="bg-gray-50 py-16">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-orange-600 font-semibold text-sm mb-2">Testimonials</p>
+            <h2 class="text-4xl font-bold text-gray-900 mb-8">
+                What our customers are saying about us
+            </h2>
+        </div>
+
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+
+            <div class="p-6 bg-white shadow-md rounded-lg">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-orange-500">
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-line text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    "Renting a car from Gorent was a great decision. The process was seamless, and the car was
+                    clean and reliable. I'll definitely use their service again!"
+                </p>
+                <div class="flex items-center">
+                    <img class="w-12 h-12 rounded-full mr-4"
+                        src="https://demo.awaikenthemes.com/novaride/wp-content/uploads/2024/08/author-1.jpg">
+                    <div>
+                        <p class="font-semibold text-gray-900">Alice White</p>
+                        <p class="text-sm text-gray-500">Project Manager</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Statistics & Listings -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Stats Section -->
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-lg shadow flex justify-between items-center">
-                        <div>
-                            <h4 class="text-gray-600">Revenue Summary</h4>
-                            
-                            <?php
-                                $row = $total_Revenue->fetch_row();
-                                        if($row){
-                                            echo'
-                                            <p class="text-xl font-bold">' . $row[0] . ' $</p>';
-                                        }else{
-                                            echo'
-                                            <p class="text-xl font-bold">0</p>';
-                                        }
-                                ?>
-                            <p class="text-sm text-green-500">+4.5 from last month</p>
-                        </div>
-                        <i class="ri-line-chart-line text-3xl text-orange-600"></i>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow flex justify-between items-center">
-                        <div>
-                            <h4 class="text-gray-600">Contracts</h4>
-                                <?php
-                                $row = $nbr_contrat->fetch_row();
-                                        if($row){
-                                            echo'
-                                            <p class="text-xl font-bold">' . $row[0] . '</p>';
-                                        }else{
-                                            echo'
-                                            <p class="text-xl font-bold">0</p>';
-                                        }
-                                ?>
-
-                            <p class="text-sm text-green-500">+7.2 from last month</p>
-                        </div>
-                        <i class="ri-wallet-line text-3xl text-orange-600"></i>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow flex justify-between items-center">
-                        <div>
-                            <h4 class="text-gray-600">Clients</h4>
-
-                            <?php
-                                $row = $nbr_clients->fetch_row();
-                                        if($row){
-                                            echo'
-                                            <p class="text-xl font-bold">' . $row[0] . '</p>';
-                                        }else{
-                                            echo'
-                                            <p class="text-xl font-bold">0</p>';
-                                        }
-                                ?>
-
-                            <p class="text-sm text-red-500">-1.2 from last month</p>
-                        </div>
-                        <i class="ri-group-3-line text-3xl text-orange-600"></i>
+            <div class="p-6 bg-white shadow-md rounded-lg">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-orange-500">
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
                     </div>
                 </div>
-
-                <!-- Car Listings -->
-                <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow">
-                   <h4 class="text-lg font-bold mb-4">Contracts by Status</h4>
-                <div class="overflow-x-auto">
-                <div>
-                    <canvas id="myChart" class="responsiveCanvas" width="750" height="300" style="display: block; box-sizing: border-box;"></canvas>
-                </div>
-                </div>
+                <p class="text-gray-600 mb-6">
+                    "Gorent provided excellent service. The car was ready on time, and the rates were very
+                    competitive. Highly recommend them for anyone needing a rental."
+                </p>
+                <div class="flex items-center">
+                    <img class="w-12 h-12 rounded-full mr-4"
+                        src="https://demo.awaikenthemes.com/novaride/wp-content/uploads/2024/08/author-4.jpg">
+                    <div>
+                        <p class="font-semibold text-gray-900">Floyd Miles</p>
+                        <p class="text-sm text-gray-500">Business Consultant</p>
+                    </div>
                 </div>
             </div>
-        </section>
-    </div>
 
-    <!-- add new client modal -->
-    <div id="addClient" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
 
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl  font-semibold text-orange-600">Add New Client</h3>
-                <button class="text-gray-500 hover:text-gray-700 closeAddClient"><i
-                        class="ri-close-circle-line text-2xl text-orange-600"></i></button>
+            <div class="p-6 bg-white shadow-md rounded-lg">
+                <div class="flex items-center mb-4">
+                    <div class="flex text-orange-500">
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-fill text-xl"></i>
+                        <i class="ri-star-line text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    "The car I rented was in perfect condition, and the staff was incredibly helpful. Go rent
+                    exceeded my expectations. I will use them again in the future!"
+                </p>
+                <div class="flex items-center">
+                    <img class="w-12 h-12 rounded-full mr-4"
+                        src="https://demo.awaikenthemes.com/novaride/wp-content/uploads/2024/08/author-2.jpg">
+                    <div>
+                        <p class="font-semibold text-gray-900">Annette Black</p>
+                        <p class="text-sm text-gray-500">Marketing Specialist</p>
+                    </div>
+                </div>
             </div>
-
-            <form action="./phpFunction/addClient.php" method="post">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-
-                    <div>
-                        <label for="first-name" class="mb-2 block text-sm font-medium text-gray-700">First Name</label>
-                        <input placeholder="Enter your first name" type="text" id="first-name" name="first-name"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="last-name" class="mb-2 block text-sm font-medium text-gray-700">Last Name</label>
-                        <input placeholder="Enter your last name" type="text" id="last-name" name="last-name"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                        <input placeholder="Enter your email address" type="email" id="email" name="email"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="phone" class="mb-2 block text-sm font-medium text-gray-700">Phone</label>
-                        <input placeholder="Enter your phone number" type="text" id="phone" name="phone"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <label for="address" class="mb-2 block text-sm font-medium text-gray-700">Address</label>
-                    <textarea placeholder="Enter your message" id="address" name="address" rows="3"
-                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                        required></textarea>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 closeAddClient">Cancel</button>
-                    <button type="submit" name="submit"
-                        class="px-8 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600">Save</button>
-                </div>
-            </form>
         </div>
     </div>
 
-    <!-- Add new car modal  -->
 
-    <div id="addCarModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl  font-semibold text-orange-600">Add New Car</h3>
-                <button class="text-gray-500 hover:text-gray-700 closeAddCar"><i
-                        class="ri-close-circle-line text-2xl text-orange-600"></i></button>
+    <!-- footer -->
+    <footer class="bg-black text-white py-10 rounded-2xl mt-6 mb-6">
+        <div class="max-w-7xl mx-6 px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <a href="./index.php">
+                    <img src="./assets/gorent-logo.svg" width="160px">
+                </a>
+                <p class="mt-4 text-white">
+                    Experience the ease and convenience of renting a car with Go rent.
+                </p>
             </div>
 
-            <form action="./phpFunction/addCar.php" method="post">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-
-                    <div class="col-span-2">
-                        <label for="Car Number" class="mb-2 block text-sm font-medium text-gray-700">Car Number</label>
-                        <input placeholder="Enter car Number" type="text" id="carNumber" name="carNumber"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div class="col">
-                        <label for="Brand Name" class="mb-2 block text-sm font-medium text-gray-700">Brand Name</label>
-                        <input placeholder="Enter car brand name" type="text" id="brandName" name="brandName"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="Model" class="mb-2 block text-sm font-medium text-gray-700">Model</label>
-                        <input placeholder="Enter model name" type="text" id="model" name="model"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="Price/Day" class="mb-2 block text-sm font-medium text-gray-700">Price/Day</label>
-                        <input placeholder="Enter price amount per 1 day" type="text" id="priceDay	" name="priceDay"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="year" class="mb-2 block text-sm font-medium text-gray-700">Year</label>
-                        <input placeholder="Enter modal year" type="text" id="year" name="year"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-                </div>
-
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 closeAddCar">Cancel</button>
-                    <button type="submit" name="submit"
-                        class="px-8 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-<!-- Add New contrat modal  -->
-
-<div id="addContratModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-xl  font-semibold text-orange-600">Add New Contrat</h3>
-      <button class="text-gray-500 hover:text-gray-700 closeAddContrat"><i
-         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
-    </div>
-
-    <form action="../phpFunction/addContract.php" method="post">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="clientId" class="mb-2 block text-sm font-medium text-gray-700" >Client ID</label> 
-                        <select class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" name="clientId">
-                        <option value="" disabled selected >Select a Client</option>
-                        <?php
-                         
-                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM users");
-                            while ($client = $clients->fetch_assoc()) {
-                                echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
-                            }
-                        ?>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="carId" class="mb-2 block text-sm font-medium text-gray-700">Car ID</label>
-                        <select id="car" name="carId" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" required>
-                            <option value="" disabled selected>Select a car </option>
-                            <?php
-                                $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
-                                while ($car = $cars->fetch_assoc()) {
-                                    echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="start-date" class="mb-2 block text-sm font-medium text-gray-700">Start Date</label>
-                        <input placeholder="Enter rent start date" type="date" id="startDate" name="startDate"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="end-date" class="mb-2 block text-sm font-medium text-gray-700">End Date</label>
-                        <input placeholder="Enter rent end date" type="date" id="endDate" name="endDate"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div class="col-span-2">
-                        <label for="total" class="mb-2 block text-sm font-medium text-gray-700">Total</label>
-                        <input placeholder="Enter total price" type="number" id="total" name="total"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 closeAddContrat">Cancel</button>
-                    <button type="submit" name="submit"
-                        class="px-8 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600">Save</button>
-                </div>
-            </form>
-  </div>
-</div>
-
-
-<!-- Add New contrat modal  -->
-
-<div id="addContratModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl  font-semibold text-orange-600">Add New Contrat</h3>
-                <button class="text-gray-500 hover:text-gray-700 closeAddContrat"><i
-                        class="ri-close-circle-line text-2xl text-orange-600"></i></button>
+            <div class="md:ml-36">
+                <h2 class="text-lg font-semibold">Legal Policy</h2>
+                <ul class="mt-4 space-y-2">
+                    <li><a href="#" class="hover:text-orange-500">Term & Condition</a></li>
+                    <li><a href="#" class="hover:text-orange-500">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-orange-500">Legal Notice</a></li>
+                    <li><a href="#" class="hover:text-orange-500">Accessibility</a></li>
+                </ul>
             </div>
 
-            <form action="./phpFunction/addContract.php" method="post">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="clientId" class="mb-2 block text-sm font-medium text-gray-700" >Client ID</label> 
-                        <select class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" name="clientId">
-                        <option value="" disabled selected >Select a Client</option>
-                        <?php
-                         
-                            $clients = $connection->query("SELECT id, CONCAT(First_Name, ' ',Last_Name) AS Full_Name FROM users");
-                            while ($client = $clients->fetch_assoc()) {
-                                echo "<option value='{$client['id']}'>{$client['Full_Name']}</option>";
-                            }
-                        ?>
-                        </select>
-                    </div>
+            <div class="md:ml-24">
+                <h2 class="text-lg font-semibold">Quick Links</h2>
+                <ul class="mt-4 space-y-2">
+                    <li><a href="#" class="hover:text-orange-500">Home</a></li>
+                    <li><a href="#" class="hover:text-orange-500">About Us</a></li>
+                    <li><a href="#" class="hover:text-orange-500">Car Type</a></li>
+                    <li><a href="#" class="hover:text-orange-500">Service</a></li>
+                </ul>
+            </div>
 
-                    <div>
-                        <label for="carId" class="mb-2 block text-sm font-medium text-gray-700">Car ID</label>
-                        <select id="car" name="carId" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" required>
-                            <option value="" disabled selected>Select a car </option>
-                            <?php
-                                $cars = $connection->query("SELECT ID, CONCAT(Brand, ' ', Model) AS cars FROM cars ");
-                                while ($car = $cars->fetch_assoc()) {
-                                    echo "<option value='{$car['ID']}'>{$car['cars']}</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
 
-                    <div>
-                        <label for="start-date" class="mb-2 block text-sm font-medium text-gray-700">Start Date</label>
-                        <input placeholder="Enter rent start date" type="date" id="startDate" name="startDate"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div>
-                        <label for="end-date" class="mb-2 block text-sm font-medium text-gray-700">End Date</label>
-                        <input placeholder="Enter rent end date" type="date" id="endDate" name="endDate"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-
-                    <div class="col-span-2">
-                        <label for="total" class="mb-2 block text-sm font-medium text-gray-700">Total</label>
-                        <input placeholder="Enter total price" type="number" id="total" name="total"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"
-                            required />
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 closeAddContrat">Cancel</button>
-                    <button type="submit" name="submit"
-                        class="px-8 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600">Save</button>
-                </div>
-            </form>
+            <div>
+                <h2 class="text-lg font-semibold">Subscribe To The Newsletters</h2>
+                <form class="mt-4 flex">
+                    <input type="email" placeholder="Email..."
+                        class="flex-1 px-4 py-2 rounded-l-lg bg-gray-800 text-white focus:outline-none" />
+                    <button type="submit" class="bg-orange-500 px-4 py-2 rounded-r-lg hover:bg-orange-600">
+                        <i class="ri-send-plane-fill text-white text-xl"></i>
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
-   <script>
-    
-    const labels = <?php echo json_encode($labels); ?>;
-    const data = <?php echo json_encode($data); ?>;
 
-   const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: '# Number Of Car',
-                data: data,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true, 
-            maintainAspectRatio: false 
-        }
-    });
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center flex flex-row justify-between items-center mx-12">
+            <p class="text-sm text-white">&copy; 2024 Gorent. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="hover:text-orange-500">
+                    <i class="ri-youtube-fill text-2xl"></i>
+                </a>
+                <a href="#" class="hover:text-orange-500">
+                    <i class="ri-facebook-fill text-2xl"></i>
+                </a>
+                <a href="#" class="hover:text-orange-500">
+                    <i class="ri-twitter-fill text-2xl"></i>
+                </a>
+                <a href="#" class="hover:text-orange-500">
+                    <i class="ri-instagram-fill text-2xl"></i>
+                </a>
+                <a href="#" class="hover:text-orange-500">
+                    <i class="ri-linkedin-fill text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
 
-   </script>
+
+
+
+
+
+
+
+
+
 </body>
 
 </html>

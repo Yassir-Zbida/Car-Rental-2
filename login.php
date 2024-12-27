@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['email'] = $user['email'];
-                header('Location: dashboard.php');
+                header('Location: ./client/listings.php');
                 exit;
             } else {
                 $error = "Nom d'utilisateur ou mot de passe incorrect.";
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="flex items-center justify-center min-h-screen">
   <div class="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-md">
-    <h2 class="text-2xl font-semibold text-white text-center mb-6">Login</h2>
+    <h2 class="text-2xl font-semibold text-center mb-6 text-white">Login</h2>
     <form action="login.php" method="POST">
     <?php if (!empty($error)): ?>
             <p class="text-red-500 text-center mb-4"><?= htmlspecialchars($error) ?></p>
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             id="username"
             name="username"
             placeholder="Username"
-            class="bg-transparent text-white flex-grow px-4 py-2 outline-none"
+            class="bg-transparent text-white flex-grow px-4 placeholder-white/80 py-2 outline-none"
           />
           <span class="text-white pr-4">
             <i class="ri-user-line"></i>
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             id="password"
             name="password"
             placeholder="Password"
-            class="bg-transparent text-white flex-grow px-4 py-2 outline-none"
+            class="bg-transparent text-white flex-grow px-4 placeholder-white/80 py-2 outline-none"
           />
           <span class="text-white pr-4">
             <i class="ri-lock-line"></i>
@@ -103,15 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <button
         type="submit"
         name="submit"
-        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+        class="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-500 transition"
       >
         Login
       </button>
       <p class="text-center text-white mt-4">
-        Don't have an account? <a href="#" class="hover:underline">Register</a>
+        Don't have an account? <a href="./register.php" class="hover:underline text-black">Register</a>
       </p>
     </form>
   </div>
-  <script src="https://unpkg.com/@iconify/iconify@1.0.7/iconify.min.js"></script>
 </body>
 </html>
