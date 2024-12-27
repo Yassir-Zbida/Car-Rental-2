@@ -1,37 +1,24 @@
 <?php
 require_once("../db.php");
- 
-    
-class Client {
-    private $connection;
-
-    public function __construct($dbConnection) {
-        $this->connection = $dbConnection;
-    }
-
-    public function deleteClient($id) {
-        $stmt = $this->connection->prepare("DELETE FROM clients WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        if ($stmt->execute()) {
-            header("Location: /pages/clients.php");
-            exit();
-        } else {
-            echo "Erreur : " . $stmt->error;
-        }
-        $stmt->close();
-    }
-}
+require_once("../pages/user.php");
 
 if (isset($_GET["id"])) {
     $id = intval($_GET["id"]);
 
-    // Connexion à la base de données
+    // Connexion à la base de données et création de l'objet User
     $db = new Database();
-    $connection = $db->getConnection();
+    $user = new User($db);
 
+    // Suppression de l'utilisateur
+    $result = $user->deleteUser($id);
 
-    // Gestion des clients
-    $client = new Client($connection);
-    $client->deleteClient($id);
+    if ($result === "L'utilisateur a été supprimé avec succès.") {
+        header("Location: /pages/clients.php?success=deleted");
+        exit();
+    } else {
+        echo "Erreur : " . $result;
+    }
+} else {
+    echo "ID de client manquant.";
 }
 ?>
