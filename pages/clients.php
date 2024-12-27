@@ -44,7 +44,7 @@ $users = $user->getAllUsers();
             <nav class="p-6">
                 <ul class="space-y-6">
                     <li class="text-orange-600">
-                        <a href="../index.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
+                        <a href="../admin/dashbord.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-dashboard-line"></i>
                             <span">Dashboard</span>
                         </a>
