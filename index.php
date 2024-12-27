@@ -59,10 +59,10 @@
                     <div>
                         <ul class="text-black flex flex-row gap-6 text-[18px] font-semibold font-epilogue">
                             <li class="text-orange-600"><a href="">Home</a></li>
-                            <li class="hover:text-orange-600"><a href="">Cars</a></li>
-                            <li class="hover:text-orange-600"><a href="">Bookings</a></li>
-                            <li class="hover:text-orange-600"><a href="">About</a></li>
-                            <li class="hover:text-orange-600"><a href="">Contact</a></li>
+                            <li class="hover:text-orange-600"><a href="./client/listings.php">Listings</a></li>
+                            <li class="hover:text-orange-600"><a href="./client/bookings.php">Bookings</a></li>
+                            <li class="hover:text-orange-600"><a href="./about.php">About</a></li>
+                            <li class="hover:text-orange-600"><a href="./contact.php">Contact</a></li>
                         </ul>
                     </div>
 
@@ -345,13 +345,6 @@
             </div>
         </div>
     </footer>
-
-
-
-
-
-
-
 
 
 
