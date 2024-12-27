@@ -1,28 +1,6 @@
 <?php
-
 require_once("../db.php");
-
-
-class Client {
-    private $connection;
-
-    public function __construct($dbConnection) {
-        $this->connection = $dbConnection;
-    }
-
-    public function addClient($firstName, $lastName, $email, $phone, $address) {
-        $stmt = $this->connection->prepare("INSERT INTO `users` (`first_name`, `last_name`, `phone`, `email`, `address`) 
-                                            VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $firstName, $lastName, $phone, $email, $address);
-        if ($stmt->execute()) {
-            header("Location: /pages/clients.php");
-            exit();
-        } else {
-            echo "Erreur : " . $stmt->error;
-        }
-        $stmt->close();
-    }
-}
+require_once("../pages/user.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $firstName = trim(htmlspecialchars($_POST['first-name']));
@@ -31,12 +9,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $phone = trim(htmlspecialchars($_POST['phone']));
     $address = trim(htmlspecialchars($_POST['address']));
 
-    // Connexion à la base de données
+    // Connexion à la base de données et création de l'objet User
     $database = new Database();
-    $connection = $database->getConnection();
+    $user = new User($database);
 
-    // Gestion des clients
-    $client = new Client($connection);
-    $client->addClient($firstName, $lastName, $email, $phone, $address);
+    // Ajout de l'utilisateur
+    $result = $user->addUser($firstName, $lastName, $email, $phone, $address);
+
+    if ($result === "L'utilisateur a été ajouté avec succès.") {
+        header("Location: /pages/clients.php?success=added");
+        exit();
+    } else {
+        echo "Erreur : " . $result;
+    }
 }
 ?>
