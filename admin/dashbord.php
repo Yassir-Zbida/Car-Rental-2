@@ -63,27 +63,27 @@ FROM contracts"));
             <nav class="p-6">
                 <ul class="space-y-6">
                     <li class="text-orange-600">
-                        <a href="#" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
+                        <a href="dashbord.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-dashboard-line text-orange-600"></i>
                             <span class="text-orange-600">Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="./pages/clients.php"
+                        <a href="../pages/clients.php"
                             class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-group-line"></i>
                             <span>Clients</span>
                         </a>
                     </li>
                     <li>
-                        <a href="./pages/cars.php"
+                        <a href="../pages/cars.php"
                             class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-car-line"></i>
                             <span>Cars</span>
                         </a>
                     </li>
                     <li>
-                        <a href="./pages/contrats.php"
+                        <a href="../pages/contrats.php"
                             class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-save-line"></i>
                             <span>Contrats</span>
@@ -245,7 +245,7 @@ FROM contracts"));
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="./phpFunction/addClient.php" method="post">
+            <form action="./adminFunction/addClient.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
                     <div>
@@ -305,7 +305,7 @@ FROM contracts"));
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="./phpFunction/addCar.php" method="post">
+            <form action="./adminFunction/addCar.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
                     <div class="col-span-2">
@@ -366,7 +366,7 @@ FROM contracts"));
          class="ri-close-circle-line text-2xl text-orange-600"></i></button>
     </div>
 
-    <form action="../phpFunction/addContract.php" method="post">
+    <form action="../adminFunction/addContract.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="clientId" class="mb-2 block text-sm font-medium text-gray-700" >Client ID</label> 
@@ -439,7 +439,7 @@ FROM contracts"));
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="./phpFunction/addContract.php" method="post">
+            <form action="./adminFunction/addContract.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="clientId" class="mb-2 block text-sm font-medium text-gray-700" >Client ID</label> 
