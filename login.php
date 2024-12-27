@@ -1,30 +1,35 @@
 <?php
-
 session_start();
 require_once 'db.php';
+
 $db = new Database();
 $connection = $db->getConnection();
 $error = "";
 
+// Traiter le formulaire de connexion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
     if (!empty($username) && !empty($password)) {
         $stmt = $connection->prepare("SELECT * FROM users WHERE username = ?");
         if ($stmt) {
-            $stmt->bind_param('s', $username); // 's' indique un string
+            $stmt->bind_param('s', $username);
             $stmt->execute();
             $result = $stmt->get_result();
             $user = $result->fetch_assoc();
 
             if ($user && password_verify($password, $user['password_hash'])) {
-                
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['email'] = $user['email'];
-                header('Location: ./client/listings.php');
+
+                // Redirection en fonction du rôle
+                if ($user['role'] === 'admin') {
+                    header('Location: ./admin/dashbord.php');
+                } else {
+                    header('Location: ./client/listings.php');
+                }
                 exit;
             } else {
                 $error = "Nom d'utilisateur ou mot de passe incorrect.";

@@ -1,5 +1,5 @@
 <?php
-require_once("./db.php");
+require_once("../db.php");
  
  $db = new Database();
  $connection = $db->getConnection();
@@ -58,7 +58,7 @@ FROM contracts"));
         <!-- Sidebar -->
         <aside class="w-full lg:w-64 bg-white border-r" id="sidebar">
             <div class="p-6 border-b flex flex-row justify-between items-center">
-                <img src="./assets/gorent-logo.svg">
+                <img src="../assets/gorent-logo.svg">
             </div>
             <nav class="p-6">
                 <ul class="space-y-6">
@@ -119,7 +119,7 @@ FROM contracts"));
                     <button class="text-gray-500 hover:text-gray-700">
                         <i class="ri-notification-line text-xl"></i>
                     </button>
-                    <img src="./assets/profile.png" alt="User" class="w-10 h-10 rounded-full">
+                    <img src="../assets/profile.png" alt="User" class="w-10 h-10 rounded-full">
                 </div>
             </header>
 

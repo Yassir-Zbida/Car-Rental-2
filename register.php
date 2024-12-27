@@ -10,7 +10,7 @@ class User {
     }
 
     public function register($username, $email, $password) {
-        
+        // Vérifier si l'email existe déjà
         $sql = "SELECT * FROM users WHERE email = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("s", $email);
@@ -18,30 +18,39 @@ class User {
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            return "This email is already registered.";
+            return "Cet email est déjà enregistré.";
         }
 
-        
+        // Valider les données
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return "Adresse email invalide.";
+        }
+        if (strlen($password) < 8) {
+            return "Le mot de passe doit contenir au moins 8 caractères.";
+        }
+
+        // Hasher le mot de passe
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-        
+        // Insérer un nouvel utilisateur avec le rôle 'client'
         $sql = "INSERT INTO users (username, email, password_hash, role, created_at, updated_at) VALUES (?, ?, ?, 'client', NOW(), NOW())";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("sss", $username, $email, $passwordHash);
 
         if ($stmt->execute()) {
-            $_SESSION['user_id'] = $this->db->insert_id; 
+            $_SESSION['user_id'] = $this->db->insert_id; // ID de l'utilisateur enregistré
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
-            return "Account created successfully! You are logged in.";
+            return "Compte créé avec succès ! Vous êtes connecté.";
         } else {
-            return "Error while registering:" . $this->db->error;
+            return "Erreur lors de l'inscription : " . $this->db->error;
         }
     }
 }
 
 $message = "";
 
+// Traiter le formulaire d'inscription
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $username = htmlspecialchars($_POST['nom_utilisateur']);
     $email = htmlspecialchars($_POST['email']);
@@ -51,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $user = new User($database);
     $message = $user->register($username, $email, $password);
 
+    // Rediriger si l'inscription est réussie
     if (isset($_SESSION['user_id'])) {
         header("Location: ./client/listings.php");
         exit;
