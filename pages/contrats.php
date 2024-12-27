@@ -40,7 +40,7 @@
             <nav class="p-6">
                 <ul class="space-y-6">
                     <li class="text-orange-600">
-                        <a href="../index.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
+                        <a href="../admin/dashbord.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-dashboard-line"></i>
                             <span>Dashboard</span>
                         </a>
@@ -150,17 +150,17 @@
 
                                 $sql = "
     SELECT 
-        contracts.ID,
-        CONCAT(clients.`First_Name`, ' ', clients.`Last_Name`) AS ClientName,
-        CONCAT(cars.Brand, ' ', cars.Model) AS Car_Name,  
-        contracts.Start_Date,
-        contracts.End_Date,
-        contracts.Total,
-        contracts.Client_ID,
-        contracts.Car_ID
+        contracts.id,
+        CONCAT(users.`first_name`, ' ', users.`last_name`) AS ClientName,
+        CONCAT(cars.brand, ' ', cars.model) AS Car_Name,  
+        contracts.start_date,
+        contracts.end_date,
+        contracts.total,
+        contracts.user_id,
+        contracts.car_id
     FROM contracts
-    JOIN clients ON contracts.Client_ID = clients.ID
-    JOIN cars ON contracts.Car_ID = cars.ID;
+    JOIN users ON contracts.user_id = users.id
+    JOIN cars ON contracts.car_id = cars.id;
 ";
 
                                 $result = $connection->query($sql);
@@ -172,12 +172,12 @@
                                 while ($row = $result->fetch_assoc()) {
                                     echo '
     <tr class="hover:bg-gray-50">
-        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["ID"]) . '</td>
+    <td class="py-3 px-4 border-b">' . htmlspecialchars($row["id"]) . '</td>
         <td class="py-3 px-4 border-b">' . htmlspecialchars($row["ClientName"]) . '</td> 
         <td class="py-3 px-4 border-b">' . htmlspecialchars($row["Car_Name"]) . '</td> 
-        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["Start_Date"]) . '</td>
-        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["End_Date"]) . '</td>
-        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["Total"]) . '</td>
+        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["start_date"]) . '</td>
+        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["end_date"]) . '</td>
+        <td class="py-3 px-4 border-b">' . htmlspecialchars($row["total"]) . '</td>
         <td class="py-3 px-4 border-b">
             <span class="bg-green-100 text-green-600 py-1 px-3 rounded-full">Active</span>
         </td>
@@ -185,16 +185,16 @@
             <button 
                 class="text-blue-500 hover:text-blue-600 editContractBtn" 
                 onclick="openEditModal(
-                    ' . htmlspecialchars($row["ID"]) . ', 
-                    \'' . htmlspecialchars($row["Start_Date"]) . '\', 
-                    \'' . htmlspecialchars($row["End_Date"]) . '\', 
-                    ' . htmlspecialchars($row["Total"]) . ', 
-                    ' . htmlspecialchars($row["Client_ID"]) . ', 
-                    ' . htmlspecialchars($row["Car_ID"]) . '
+                    ' . htmlspecialchars($row["id"]) . ', 
+                    \'' . htmlspecialchars($row["start_date"]) . '\', 
+                    \'' . htmlspecialchars($row["end_date"]) . '\', 
+                    ' . htmlspecialchars($row["total"]) . ', 
+                    ' . htmlspecialchars($row["user_id"]) . ', 
+                    ' . htmlspecialchars($row["car_id"]) . '
                 )">
                 <i class="ri-eye-line text-lg"></i>
             </button>
-            <a href="../phpFunction/deleteContract.php?id=' . htmlspecialchars($row["ID"]) . '" class="btnDelete">
+            <a href="../adminFunction/deleteContract.php?id=' . htmlspecialchars($row["id"]) . '" class="btnDelete">
                 <i class="ri-delete-bin-line text-lg text-red-500 hover:text-red-700"></i>
             </a>
         </td>
@@ -223,7 +223,7 @@
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="../phpFunction/addContract.php" method="post">
+            <form action="../adminFunction/addContract.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="clientId" class="mb-2 block text-sm font-medium text-gray-700">Client ID</label>
@@ -299,7 +299,7 @@
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="../phpFunction/editContract.php" method="post">
+            <form action="../adminFunction/editContract.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="clientId" class="mb-2 block text-sm font-medium text-gray-700">Client ID</label>

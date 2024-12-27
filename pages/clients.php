@@ -40,7 +40,7 @@
             <nav class="p-6">
                 <ul class="space-y-6">
                     <li class="text-orange-600">
-                        <a href="../index.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
+                        <a href="../admin/dashbord.php" class="flex items-center space-x-4 text-gray-600 hover:text-orange-600">
                             <i class="ri-dashboard-line"></i>
                             <span">Dashboard</span>
                         </a>
@@ -163,11 +163,11 @@
                                        <td class="py-3 px-4 border-b">'. $row["address"] .'</td>
                                        <td class="py-3 px-4 border-b text-center space-x-2">
                                        
-                                       <a href="../phpFunction/editClient.php?id='.$row["id"].'" class="text-blue-500 hover:text-blue-600 editClientBtn">
+                                       <a href="../adminFunction/editClient.php?id='.$row["id"].'" class="text-blue-500 hover:text-blue-600 editClientBtn">
                                         <i class="ri-edit-line text-lg"></i>
                                        </a>
                                        
-                                       <a href="../phpFunction/deleteClient.php?id='.$row["id"].'" class="btnDelete">
+                                       <a href="../adminFunction/deleteClient.php?id='.$row["id"].'" class="btnDelete">
                                              <i class="ri-delete-bin-line text-lg text-red-500 hover:text-red-700"></i>
                                        </a>
                                     </td>
@@ -194,7 +194,7 @@
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="../phpFunction/addClient.php" method="post">
+            <form action="../adminFunction/addClient.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
                     <div>
@@ -254,7 +254,7 @@
                         class="ri-close-circle-line text-2xl text-orange-600"></i></button>
             </div>
 
-            <form action="../phpFunction/editClient.php" method="post">
+            <form action="../adminFunction/editClient.php" method="post">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
                     <div>
