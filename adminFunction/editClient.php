@@ -1,54 +1,15 @@
 <?php
-// Classe de gestion de la base de données
 require_once("../db.php");
- 
-   
+require_once("../pages/user.php");
 
-// Classe de gestion des clients
-class Client {
-    private $connection;
-
-    public function __construct($dbConnection) {
-        $this->connection = $dbConnection;
-    }
-
-    // Récupère les informations d'un client par son ID
-    public function getClientById($id) {
-        $stmt = $this->connection->prepare("SELECT * FROM clients WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
-    }
-
-    // Met à jour les informations d'un client
-    public function updateClient($id, $firstName, $lastName, $email, $phone, $address) {
-        $stmt = $this->connection->prepare("UPDATE clients SET First_Name = ?, Last_Name = ?, Email = ?, Phone = ?, Address = ? WHERE id = ?");
-        $stmt->bind_param("sssssi", $firstName, $lastName, $email, $phone, $address, $id);
-        return $stmt->execute();
-    }
-}
-
-// Vérifie si l'ID est passé dans l'URL
 if (isset($_GET['id'])) {
     $clientId = $_GET['id'];
-
-    // Connexion à la base de données
     $db = new Database();
-    $connection = $db->getConnection();
-
-    // Création de l'objet Client pour gérer les clients
-    $client = new Client($connection);
+    $user = new User($db);
 
     // Récupère les détails du client
-    $clientDetails = $client->getClientById($clientId);
+    $clientDetails = $user->getUserById($clientId);
 
-    // Si le client existe
-    if (!$clientDetails) {
-        echo "Client ID is missing or invalid.";
-        exit;
-    }
-
-    // Traitement du formulaire de mise à jour
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $firstName = $_POST['first-name'];
         $lastName = $_POST['last-name'];
@@ -56,16 +17,22 @@ if (isset($_GET['id'])) {
         $phone = $_POST['phone'];
         $address = $_POST['address'];
 
-        // Met à jour les informations du client
-        if ($client->updateClient($clientId, $firstName, $lastName, $email, $phone, $address)) {
-            header("Location: ../pages/clients.php");
-            exit;
+        $updateResult = $user->updateUser($clientId, null, $email, $firstName, $lastName, $phone, $address);
+        if ($updateResult === "Les informations de l'utilisateur ont été mises à jour avec succès.") {
+          header("Location: ../pages/clients.php");
         } else {
-            echo "Error updating client: " . $connection->error;
+           echo json_encode(['success' => false, 'message' => 'Error updating client: ' . $updateResult]);
+           exit;
         }
     }
+
+} else {
+    echo json_encode(['success' => false, 'message' => 'Client ID is missing or invalid.']);
+    exit;
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +43,7 @@ if (isset($_GET['id'])) {
 </head>
 <body>
     <?php include '../pages/clients.php'; ?>
-
+<?php echo "tedt" ?>
     <!-- Modal Edit Client Form -->
     <div id="editClientModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
@@ -89,25 +56,25 @@ if (isset($_GET['id'])) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <div>
                         <label for="first-name" class="mb-2 block text-sm font-medium text-gray-700">First Name</label>
-                        <input type="text" id="firstNameEdit" name="first-name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['First_Name']; ?>" required />
+                        <input type="text" id="firstNameEdit" name="first-name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['first_name']; ?>" required />
                     </div>
                     <div>
                         <label for="last-name" class="mb-2 block text-sm font-medium text-gray-700">Last Name</label>
-                        <input type="text" id="lastNameEdit" name="last-name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['Last_Name']; ?>" required />
+                        <input type="text" id="lastNameEdit" name="last-name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['last_name']; ?>" required />
                     </div>
                     <div>
                         <label for="email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="emailEdit" name="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['Email']; ?>" required />
+                        <input type="email" id="emailEdit" name="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['email']; ?>" required />
                     </div>
                     <div>
                         <label for="phone" class="mb-2 block text-sm font-medium text-gray-700">Phone</label>
-                        <input type="text" id="phoneEdit" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['Phone']; ?>" required />
+                        <input type="text" id="phoneEdit" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" value="<?php echo $clientDetails['phone']; ?>" required />
                     </div>
                 </div>
 
                 <div class="mt-4">
                     <label for="address" class="mb-2 block text-sm font-medium text-gray-700">Address</label>
-                    <textarea id="address" name="address" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" required><?php echo $clientDetails['Address']; ?></textarea>
+                    <textarea id="address" name="address" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500" required><?php echo $clientDetails['address']; ?></textarea>
                 </div>
 
                 <div class="mt-6 flex justify-end space-x-2">
