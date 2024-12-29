@@ -82,6 +82,16 @@ $users = $user->getAllCars();
                         </a>
                     </li>
                 </ul>
+                <hr class="my-6">
+                <ul class="space-y-6">
+                    <li>
+                        <a href="../logout.php" class="flex items-center space-x-4 text-red-600 hover:text-orange-600">
+                            <i class="ri-logout-box-line"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                    
+                </ul>
             </nav>
         </aside>
 
